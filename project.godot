@@ -18,10 +18,28 @@ config/icon="res://icon.svg"
 [autoload]
 
 Manager="*res://Manager.gd"
+GlobalControl="*res://Control.gd"
+
+[display]
+
+window/handheld/orientation=1
+window/vsync/vsync_mode=3
 
 [dotnet]
 
 project/assembly_name="BurnManager"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/plugin_refresher/plugin.cfg")
+
+[input]
+
+press={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":1,"position":Vector2(296, 9),"global_position":Vector2(300, 50),"factor":1.0,"button_index":1,"canceled":false,"pressed":true,"double_click":false,"script":null)
+]
+}
 
 [rendering]
 
