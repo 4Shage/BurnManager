@@ -33,10 +33,10 @@ var user : Dictionary = {
 func _ready():
 	if Manager.users != {}:
 		user = Manager.users[Manager.selUser]
-		line_sn.text = Manager.selUser
+		line_sn.text = user[\"shortName\"]
 	line_n.text = user[\"name\"]
-	line_cost.text = user[\"cost\"]
-	line_borrowed.text = user[\"borrowed\"]
+	line_cost.text = str(user[\"cost\"])
+	line_borrowed.text = str(user[\"borrowed\"])
 	var weekdays
 	for e in user[\"dayOn\"]:
 		var i : String
@@ -60,7 +60,7 @@ func _ready():
 		else:
 			weekdays = i
 			
-	line_weekdays.text = weekdays
+	if weekdays != null: line_weekdays.text = weekdays
 	for e in user[\"dayOff\"]:
 		il.add_item(e)
 
@@ -95,7 +95,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="."]
+[node name="AspectRatioContainer" type="BoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -105,6 +105,7 @@ grow_vertical = 2
 
 [node name="BoxContainer" type="BoxContainer" parent="AspectRatioContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="Panel" type="Panel" parent="AspectRatioContainer/BoxContainer"]
 layout_mode = 2
