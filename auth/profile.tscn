@@ -1,0 +1,120 @@
+[gd_scene load_steps=3 format=3 uid="uid://cucttuhk5jcpf"]
+
+[sub_resource type="GDScript" id="GDScript_glp1j"]
+script/source = "extends Control
+
+
+func _ready():
+	Data.cs = \"profile\"
+"
+
+[sub_resource type="GDScript" id="GDScript_uaa3h"]
+script/source = "extends Button
+
+var FB : FirebaseAuth = Firebase.Auth
+var m : bool
+
+func _ready() -> void:
+	if Data.auth == null:
+		self.text = \"Login\"
+		m = false
+	else:
+		self.text = \"Log out\"
+		m = true
+
+func _on_pressed() -> void:
+	#Manager.saveSelf()
+	if m:
+		FB.logout()
+		Data.auth = null
+	else:
+		FB.logout()
+		Data.auth = null
+		Manager.chScene(\"auth\")
+"
+
+[node name="profile" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_glp1j")
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AspectRatioContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="AspectRatioContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AspectRatioContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="AspectRatioContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+placeholder_text = "JD"
+
+[node name="Label" type="Label" parent="AspectRatioContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = " / "
+
+[node name="LineEdit2" type="LineEdit" parent="AspectRatioContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "John Doe"
+
+[node name="MarginContainer2" type="MarginContainer" parent="AspectRatioContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BoxContainer2" type="BoxContainer" parent="AspectRatioContainer/VBoxContainer/MarginContainer2"]
+layout_mode = 2
+vertical = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AspectRatioContainer/VBoxContainer/MarginContainer2/BoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LineEdit" type="LineEdit" parent="AspectRatioContainer/VBoxContainer/MarginContainer2/BoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Id trenera"
+
+[node name="Button" type="Button" parent="AspectRatioContainer/VBoxContainer/MarginContainer2/BoxContainer2/HBoxContainer"]
+layout_mode = 2
+text = "Wyślij zapytanie"
+
+[node name="BoxContainer" type="BoxContainer" parent="AspectRatioContainer/VBoxContainer/MarginContainer2/BoxContainer2"]
+layout_mode = 2
+vertical = true
+
+[node name="Trener" type="RichTextLabel" parent="AspectRatioContainer/VBoxContainer/MarginContainer2/BoxContainer2/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Name: John Doe"
+fit_content = true
+scroll_following = true
+
+[node name="ItemList" type="ItemList" parent="AspectRatioContainer/VBoxContainer/MarginContainer2/BoxContainer2/BoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="AspectRatioContainer/VBoxContainer"]
+layout_mode = 2
+text = "Log out"
+script = SubResource("GDScript_uaa3h")
+
+[connection signal="pressed" from="AspectRatioContainer/VBoxContainer/Button" to="AspectRatioContainer/VBoxContainer/Button" method="_on_pressed"]

@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://dxycp2bo1qy8w"]
+
+[node name="Rules" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BoxContainer" type="BoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+vertical = true
+
+[node name="Label" type="Label" parent="BoxContainer"]
+layout_mode = 2
+text = "Regulamin"
+horizontal_alignment = 1
+
+[node name="TextEdit" type="TextEdit" parent="BoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "1. Zakup usług jest równoznaczny z zapoznaniem się i zaakceptowaniem zapisów niniejszego Regulaminu.
+2. Płatności za treningi/pakiety treningowe  realizowane są z góry – w gotówce.
+3. Termin usługi jest ustalany wspólnie przez Klienta i Trenera.
+4. Czas trwania treningu to 60 minut. 
+5. W przypadku braku możliwości pojawienia się na treningu należy odwołać go telefonicznie/SMS pod numerem telefonu + 48 509 853 286 do godziny 20:00 dnia poprzedzającego dzień treningowy.
+6. W przypadku nie pojawienia się Klienta na treningu bez jego wcześniejszego odwołania, Klient zostaje obciążony pełnym ustalonym kosztem treningu.
+7. W przypadku odwołania treningu przez Klienta w tym samym dniu – trening zostaje uznany za wykonany i Klient zobowiązany jest do uiszczenia opłaty.
+8. W przypadku kiedy trening zostanie odwołany przez Klienta po godzinie 20:00 dnia poprzedzającego dzień treningowy, po ustaleniu z Trenerem taki trening mógłby  odbyć się w innym terminie, gdyby była taka możliwość, jeżeli nie zostanie ustalony inny termin, zostanie zastosowany punkt 6 regulaminu.
+9. W przypadku odwołania treningu przez Trenera w tym samym dniu, jego realizacja musi odbyć się w innym terminie.
+10. W przypadku nagłego wypadku/zdarzenia, przez który Klient nie mógłby odbyć treningu, musi ten fakt zostać zgłoszony natychmiastowo. Po ustaleniu z Trenerem nie odbyty  trening zostanie odwołany lub odbyty w innym terminie.
+11.Treningi odwołane, które zostaną przełożone na inny dzień mogą odbyć się jako trening indywidualny lub grupowy w stosunku do możliwości w grafiku Trenera.
+12. W przypadku spóźnienia Klienta na usługę – czas usługi ulega skróceniu o czas spóźnienia. 
+13. Klient zobowiązuje się do wykorzystywania treningów zgodnie z terminem w grafiku.
+14. Klient zobowiązuje się poinformować Trenera o swoim aktualnym stanie zdrowia i możliwych sytuacjach, które mogą wpłynąć na przebieg  treningu lub jego odwołanie."
+editable = false
+context_menu_enabled = false
+shortcut_keys_enabled = false
+drag_and_drop_selection_enabled = false
+virtual_keyboard_enabled = false
+middle_mouse_paste_enabled = false
+wrap_mode = 1

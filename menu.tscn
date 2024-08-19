@@ -1,4 +1,11 @@
-[gd_scene format=3 uid="uid://cadwudvpdem4a"]
+[gd_scene load_steps=2 format=3 uid="uid://cadwudvpdem4a"]
+
+[sub_resource type="GDScript" id="GDScript_jdyov"]
+script/source = "extends Control
+
+func _ready():
+	Data.cs = \"menu\"
+"
 
 [node name="Menu" type="Control"]
 layout_mode = 3
@@ -7,6 +14,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = SubResource("GDScript_jdyov")
 
 [node name="AspectRatioContainer" type="AspectRatioContainer" parent="."]
 layout_mode = 1

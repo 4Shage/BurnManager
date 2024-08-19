@@ -1,0 +1,232 @@
+[gd_scene load_steps=8 format=3 uid="uid://53bklxhfjm1r"]
+
+[ext_resource type="Script" path="res://user.gd" id="1_thkdi"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_tw2kn"]
+font_size = 36
+
+[sub_resource type="GDScript" id="GDScript_dmp1c"]
+script/source = "extends ItemList
+
+func read():
+	self.clear()
+	for e in Data.users[Data.selUser][\"dayOn\"]:
+		self.add_item(e[Data.date[\"year\"]][[Data.date[\"month\"]]]+\".\"+Data.date[\"month\"]+\".\"+Data.date[\"year\"])
+"
+
+[sub_resource type="GDScript" id="GDScript_34jkj"]
+script/source = "extends LineEdit
+
+
+func _ready():
+	self.text = str(Data.date[\"month\"])
+"
+
+[sub_resource type="GDScript" id="GDScript_0f16t"]
+script/source = "extends LineEdit
+
+
+func _ready():
+	self.text = str(Data.date[\"year\"])
+"
+
+[sub_resource type="GDScript" id="GDScript_3esdb"]
+script/source = "extends Button
+
+@onready var day := $\"../LineEdit\"
+@onready var month := $\"../LineEdit2\"
+@onready var year := $\"../LineEdit3\"
+
+
+
+
+func _on_pressed():
+	Data.users[Data.selUser][\"dayOn\"][int(year.text)][int(month.text)][int(day.text)] = 0
+"
+
+[sub_resource type="GDScript" id="GDScript_747ai"]
+script/source = "extends Button
+@onready var panel = %MP
+
+var user : Dictionary = {
+		\"name\":\"Paweł Harasymowicz\",
+		\"cost\":\"60\",
+		\"borrowed\":\"0\",
+		\"startDate\":\"01.06\",
+		\"endDate\":\"01.09\",
+		\"dayOn\":{
+			1:0,
+			3:0
+		},
+		\"dayOff\":{
+			\"12.08\":0
+		},
+		\"wild\":0
+	}
+
+func _on_pressed():
+	Manager.saveUser(Manager.selUser,panel.user[\"name\"],panel.user[\"shortName\"],panel.user[\"cost\"],panel.user[\"startDate\"],panel.user[\"dayOn\"],panel.user[\"wild\"],panel.user[\"dayOff\"])
+"
+
+[node name="user" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AspectRatioContainer" type="BoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BoxContainer" type="BoxContainer" parent="AspectRatioContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MP" type="Panel" parent="AspectRatioContainer/BoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("1_thkdi")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AspectRatioContainer/BoxContainer/MP"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -273.0
+offset_right = 274.0
+offset_bottom = 50.0
+grow_horizontal = 2
+
+[node name="LineEdit" type="LineEdit" parent="AspectRatioContainer/BoxContainer/MP/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="AspectRatioContainer/BoxContainer/MP/HBoxContainer"]
+layout_mode = 2
+text = "/"
+label_settings = SubResource("LabelSettings_tw2kn")
+
+[node name="LineEdit2" type="LineEdit" parent="AspectRatioContainer/BoxContainer/MP/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AspectRatioContainer/BoxContainer/MP"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -217.0
+offset_right = 492.0
+offset_bottom = 165.0
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer"]
+layout_mode = 2
+
+[node name="BoxContainer" type="BoxContainer" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/HBoxContainer/BoxContainer"]
+layout_mode = 2
+text = "Za godzine :"
+
+[node name="LineEdit" type="LineEdit" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/HBoxContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "60"
+
+[node name="BoxContainer4" type="BoxContainer" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/HBoxContainer/BoxContainer4"]
+layout_mode = 2
+text = "Ma jeszcze zapłacić : "
+
+[node name="LineEdit" type="LineEdit" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/HBoxContainer/BoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "0"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BoxContainer2" type="BoxContainer" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/BoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Nieobecność - zgłoszona
+"
+
+[node name="Button3" type="Button" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/BoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Nieobecność - nie zgłoszona
+"
+
+[node name="Button2" type="Button" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/BoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = " Usuń 
+"
+
+[node name="ItemList" type="ItemList" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+script = SubResource("GDScript_dmp1c")
+
+[node name="BoxContainer" type="BoxContainer" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="LineEdit" type="LineEdit" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "31"
+
+[node name="LineEdit2" type="LineEdit" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "12"
+script = SubResource("GDScript_34jkj")
+
+[node name="LineEdit3" type="LineEdit" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "2024"
+script = SubResource("GDScript_0f16t")
+
+[node name="Button" type="Button" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList/BoxContainer"]
+layout_mode = 2
+text = " Dodaj "
+script = SubResource("GDScript_3esdb")
+
+[node name="Button" type="Button" parent="AspectRatioContainer/BoxContainer/MP"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Zapisz zmiany"
+script = SubResource("GDScript_747ai")
+
+[connection signal="pressed" from="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList/BoxContainer/Button" to="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList/BoxContainer/Button" method="_on_pressed"]
+[connection signal="pressed" from="AspectRatioContainer/BoxContainer/MP/Button" to="AspectRatioContainer/BoxContainer/MP/Button" method="_on_pressed"]

@@ -1,0 +1,247 @@
+[gd_scene load_steps=5 format=3 uid="uid://bsdsp5wwsmgb7"]
+
+[ext_resource type="Script" path="res://auth/auth.gd" id="1_06ohw"]
+
+[sub_resource type="GDScript" id="GDScript_t33ld"]
+script/source = "extends PanelContainer
+
+
+
+@onready var login = $VBoxContainer/VBoxContainer
+@onready var signup = $VBoxContainer/VBoxContainer2
+
+@export var mode : bool = true
+
+
+func _ready():
+	if mode:
+		lshow()
+	else:
+		sshow()
+
+
+func lshow():
+	mode = true
+	signup.hide()
+	login.show()
+
+func sshow():
+	mode = false
+	login.hide()
+	signup.show()
+
+
+
+func _on_sign_pressed():
+	sshow()
+
+
+func _on_login_pressed():
+	lshow()
+
+@onready var line_edit = $VBoxContainer/VBoxContainer/LineEdit
+@onready var line_edit_2 = $VBoxContainer/VBoxContainer/LineEdit2
+@onready var line_edit_1 = $VBoxContainer/VBoxContainer2/LineEdit
+@onready var line_edit_12 = $VBoxContainer/VBoxContainer2/LineEdit2
+
+func _process(_delta):
+	if mode:
+		line_edit_1.text = line_edit.text
+		line_edit_12.text = line_edit_2.text
+	if !mode:
+		line_edit.text = line_edit_1.text
+		line_edit_2.text = line_edit_12.text
+
+"
+
+[sub_resource type="GDScript" id="GDScript_ok5wm"]
+script/source = "extends VBoxContainer
+
+@onready var emailE = $LineEdit
+@onready var passE = $LineEdit2
+@onready var state = $\"../VBoxContainer3/State\"
+
+var email : String
+var password : String
+var FB : FirebaseAuth = Firebase.Auth
+
+
+func _ready():
+	FB = Firebase.Auth
+	FB.connect(\"login_succeeded\",on_login_succeeded.bind())
+	FB.connect(\"login_failed\",on_login_failed.bind())
+
+# Sygnały
+func on_login_succeeded(auth):
+	state.text = \"Login success!\"
+	Data.auth = auth
+	FB.save_auth(auth)
+	Manager.chScene(\"menu\")
+func on_login_failed(err_code, message):
+	printerr(str(err_code) + \" : \"+ message)
+	state.text = \"Login failed. Error: %s\" % message
+
+
+
+# Węzły
+func _on_line_edit_text_changed(new_text):
+	email = new_text
+func _on_line_edit_2_text_changed(new_text):
+	password = new_text
+func _on_login_pressed():
+	FB.login_with_email_and_password(email, password)
+"
+
+[sub_resource type="GDScript" id="GDScript_cswb4"]
+script/source = "extends VBoxContainer
+
+@onready var emailE = $LineEdit
+@onready var passE = $LineEdit2
+@onready var state = $\"../VBoxContainer3/State\"
+
+var email : String
+var password : String
+var FB : FirebaseAuth = Firebase.Auth
+
+
+func _ready():
+	FB = Firebase.Auth
+	FB.connect(\"signup_succeeded\",on_signup_succeeded.bind())
+	FB.connect(\"signup_failed\",on_signup_failed.bind())
+
+# Sygnały
+func on_signup_succeeded(auth):
+	state.text = \"Sign up success!\"
+	Data.auth = auth
+	FB.save_auth(auth)
+	Manager.chScene(\"menu\")
+func on_signup_failed(err_code, message):
+	printerr(str(err_code) + \" : \"+ message)
+	state.text = \"Sign up failed. Error: %s\" % message
+
+
+
+
+# Węzły
+func _on_line_edit_text_changed(new_text):
+	email = new_text
+func _on_line_edit_2_text_changed(new_text):
+	password = new_text
+func _on_sign_pressed():
+	FB.signup_with_email_and_password(email, password)
+"
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_06ohw")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 500
+theme_override_constants/margin_top = 300
+theme_override_constants/margin_right = 500
+theme_override_constants/margin_bottom = 300
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer"]
+custom_minimum_size = Vector2(500, 200)
+layout_mode = 2
+script = SubResource("GDScript_t33ld")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="MarginContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="State" type="Label" parent="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer3"]
+layout_mode = 2
+size_flags_vertical = 2
+text = "State"
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+script = SubResource("GDScript_ok5wm")
+
+[node name="LState" type="Label" parent="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Login"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+placeholder_text = "Email"
+alignment = 1
+
+[node name="LineEdit2" type="LineEdit" parent="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+placeholder_text = "Password"
+alignment = 1
+shortcut_keys_enabled = false
+secret = true
+
+[node name="Login" type="Button" parent="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Login"
+
+[node name="Sign" type="Button" parent="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Sign Up?"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/PanelContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+script = SubResource("GDScript_cswb4")
+
+[node name="LState" type="Label" parent="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "Sign up"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+placeholder_text = "Email"
+alignment = 1
+
+[node name="LineEdit2" type="LineEdit" parent="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+placeholder_text = "Password"
+alignment = 1
+secret = true
+
+[node name="Sign" type="Button" parent="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "Sign Up"
+
+[node name="Login" type="Button" parent="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "Login?"
+
+[connection signal="text_changed" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer/LineEdit" to="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer" method="_on_line_edit_text_changed"]
+[connection signal="text_submitted" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer/LineEdit" to="." method="login_sub"]
+[connection signal="text_changed" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer/LineEdit2" to="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer" method="_on_line_edit_2_text_changed"]
+[connection signal="text_submitted" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer/LineEdit2" to="." method="login_sub"]
+[connection signal="pressed" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer/Login" to="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer" method="_on_login_pressed"]
+[connection signal="pressed" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer/Sign" to="MarginContainer/PanelContainer" method="_on_sign_pressed"]
+[connection signal="text_changed" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2/LineEdit" to="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2" method="_on_line_edit_text_changed"]
+[connection signal="text_submitted" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2/LineEdit" to="." method="sign_sub"]
+[connection signal="text_changed" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2/LineEdit2" to="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2" method="_on_line_edit_2_text_changed"]
+[connection signal="text_submitted" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2/LineEdit2" to="." method="sign_sub"]
+[connection signal="pressed" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2/Sign" to="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2" method="_on_sign_pressed"]
+[connection signal="pressed" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2/Login" to="MarginContainer/PanelContainer" method="_on_login_pressed"]

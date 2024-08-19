@@ -12,8 +12,9 @@ var swiping : Dictionary = {
 func _init():
 	self.anchor_mode = Camera2D.ANCHOR_MODE_FIXED_TOP_LEFT
 
-func _process(delta):
-	
+func _process(_delta):
+	if Data.cs == "auth":
+		return
 	if Input.is_action_just_pressed("press"):
 		if !swiping["swp"]:
 			swiping["swp"] = true

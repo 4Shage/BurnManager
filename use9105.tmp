@@ -15,14 +15,14 @@ script/source = "extends ItemList
 
 
 func _ready():
-	if Data.users == {}:
+	if Manager.users == {}:
 		return
-	for e in Data.users:
-		self.add_item(Data.users[e][\"shortName\"])
+	for e in Manager.users:
+		self.add_item(e+\" / \"+e[\"name\"])
 
 
 func _on_item_clicked(index, at_position, mouse_button_index):
-	Data.selUser = Data.db[get_item_text(index).get_basename()]
+	Manager.selUser = get_item_text(index).get_basename()
 	Manager.chScene(\"us\")
 "
 
@@ -52,7 +52,7 @@ size_flags_horizontal = 3
 
 [node name="Button" type="Button" parent="AspectRatioContainer/BoxContainer/VBoxContainer"]
 layout_mode = 2
-text = "Dodaj podopiecznego"
+text = "Dodaj pupila"
 script = SubResource("GDScript_p3edr")
 
 [node name="ItemList" type="ItemList" parent="AspectRatioContainer/BoxContainer/VBoxContainer"]

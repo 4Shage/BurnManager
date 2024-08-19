@@ -1,10 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://cmhmc6iyawmpv"]
+[gd_scene load_steps=7 format=3 uid="uid://cmhmc6iyawmpv"]
 
 [sub_resource type="GDScript" id="GDScript_51dkr"]
 script/source = "extends Control
 
 
-func _process(delta):
+func _process(_delta):
 	if !GlobalControl.swiping[\"navbar\"]:
 		queue_free()
 "
@@ -33,7 +33,25 @@ func _on_pressed():
 	GlobalControl.swiping[\"navbar\"] = false
 "
 
+[sub_resource type="GDScript" id="GDScript_8vufk"]
+script/source = "extends Button
+
+func _on_pressed() -> void:
+	Manager.chScene(\"rules\")
+	GlobalControl.swiping[\"navbar\"] = false
+"
+
+[sub_resource type="GDScript" id="GDScript_ihp5e"]
+script/source = "extends Button
+
+
+func _on_pressed() -> void:
+	Manager.chScene(\"profile\")
+	GlobalControl.swiping[\"navbar\"] = false
+"
+
 [node name="navbar" type="Control"]
+layout_direction = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -46,10 +64,9 @@ script = SubResource("GDScript_51dkr")
 
 [node name="AspectRatioContainer" type="BoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
+anchors_preset = 9
 anchor_bottom = 1.0
-grow_horizontal = 2
+offset_right = 300.0
 grow_vertical = 2
 
 [node name="BoxContainer" type="BoxContainer" parent="AspectRatioContainer"]
@@ -82,6 +99,7 @@ script = SubResource("GDScript_28yiv")
 
 [node name="Harmonogram" type="Button" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer"]
 layout_mode = 2
+disabled = true
 text = "Harmonogram"
 script = SubResource("GDScript_6y3qv")
 
@@ -90,11 +108,24 @@ layout_mode = 2
 text = "Podopieczni"
 script = SubResource("GDScript_6xvxy")
 
-[node name="Regulamin" type="Button" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer"]
+[node name="BoxContainer" type="BoxContainer" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 10
+
+[node name="Regulamin" type="Button" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 text = "Regulamin"
+script = SubResource("GDScript_8vufk")
+
+[node name="Profil" type="Button" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Profil"
+script = SubResource("GDScript_ihp5e")
 
 [connection signal="pressed" from="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/Menu" to="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/Menu" method="_on_pressed"]
 [connection signal="pressed" from="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/Harmonogram" to="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/Harmonogram" method="_on_pressed"]
 [connection signal="pressed" from="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/Podopieczni" to="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/Podopieczni" method="_on_pressed"]
+[connection signal="pressed" from="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/BoxContainer/Regulamin" to="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/BoxContainer/Regulamin" method="_on_pressed"]
+[connection signal="pressed" from="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/BoxContainer/Profil" to="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/BoxContainer/Profil" method="_on_pressed"]
