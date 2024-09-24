@@ -1,35 +1,44 @@
-[gd_scene load_steps=5 format=3 uid="uid://bsdsp5wwsmgb7"]
+[gd_scene load_steps=8 format=3 uid="uid://bsdsp5wwsmgb7"]
 
 [ext_resource type="Script" path="res://auth/auth.gd" id="1_06ohw"]
+[ext_resource type="Theme" uid="uid://cmv6syjtux7aq" path="res://themes/light.tres" id="1_swccl"]
+[ext_resource type="Texture2D" uid="uid://tf4i3v4w262f" path="res://assets/icons/open_in_new_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" id="3_2wld8"]
 
 [sub_resource type="GDScript" id="GDScript_t33ld"]
 script/source = "extends PanelContainer
 
 
 
-@onready var login = $VBoxContainer/VBoxContainer
-@onready var signup = $VBoxContainer/VBoxContainer2
+@onready var login: VBoxContainer = $VBoxContainer/VBoxContainer
+@onready var signup: VBoxContainer = $VBoxContainer/VBoxContainer2
+@onready var f_password: VBoxContainer = $VBoxContainer/fPassword
 
-@export var mode : bool = true
+@export var mode : int = 0
 
 
 func _ready():
-	if mode:
+	if mode == 0:
 		lshow()
 	else:
 		sshow()
 
 
 func lshow():
-	mode = true
+	mode = 0
 	signup.hide()
+	f_password.hide()
 	login.show()
 
 func sshow():
-	mode = false
+	mode = 1
 	login.hide()
+	f_password.hide()
 	signup.show()
-
+func fPShow():
+	mode = 2
+	f_password.show()
+	login.hide()
+	signup.hide()
 
 
 func _on_sign_pressed():
@@ -39,19 +48,25 @@ func _on_sign_pressed():
 func _on_login_pressed():
 	lshow()
 
+func _on_f_password_pressed() -> void:
+	fPShow()
+
+
 @onready var line_edit = $VBoxContainer/VBoxContainer/LineEdit
 @onready var line_edit_2 = $VBoxContainer/VBoxContainer/LineEdit2
 @onready var line_edit_1 = $VBoxContainer/VBoxContainer2/LineEdit
 @onready var line_edit_12 = $VBoxContainer/VBoxContainer2/LineEdit2
+@onready var line_edit_fP: LineEdit = $VBoxContainer/fPassword/LineEdit
 
 func _process(_delta):
-	if mode:
+	if mode == 0:
 		line_edit_1.text = line_edit.text
 		line_edit_12.text = line_edit_2.text
-	if !mode:
+		line_edit_fP.text = line_edit.text
+	if mode == 1:
 		line_edit.text = line_edit_1.text
 		line_edit_2.text = line_edit_12.text
-
+		line_edit_fP.text = line_edit_1.text
 "
 
 [sub_resource type="GDScript" id="GDScript_ok5wm"]
@@ -84,12 +99,32 @@ func on_login_failed(err_code, message):
 
 
 # Węzły
-func _on_line_edit_text_changed(new_text):
-	email = new_text
-func _on_line_edit_2_text_changed(new_text):
-	password = new_text
 func _on_login_pressed():
+	password = passE.text
+	email = emailE.text
 	FB.login_with_email_and_password(email, password)
+"
+
+[sub_resource type="GDScript" id="GDScript_yjhdy"]
+script/source = "extends VBoxContainer
+
+@onready var emailE = $LineEdit
+@onready var state = $\"../VBoxContainer3/State\"
+
+var email : String
+var password : String
+var FB : FirebaseAuth
+
+
+func _ready():
+	FB = Firebase.Auth
+
+
+# Węzły
+func _on_post_pressed() -> void:
+	email = emailE.text
+	FB.send_password_reset_email(email)
+	$\"../..\".lshow()
 "
 
 [sub_resource type="GDScript" id="GDScript_cswb4"]
@@ -123,11 +158,9 @@ func on_signup_failed(err_code, message):
 
 
 # Węzły
-func _on_line_edit_text_changed(new_text):
-	email = new_text
-func _on_line_edit_2_text_changed(new_text):
-	password = new_text
 func _on_sign_pressed():
+	password = passE.text
+	email = emailE.text
 	FB.signup_with_email_and_password(email, password)
 "
 
@@ -138,6 +171,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_swccl")
 script = ExtResource("1_06ohw")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
@@ -200,6 +234,44 @@ text = "Login"
 [node name="Sign" type="Button" parent="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer"]
 layout_mode = 2
 text = "Sign Up?"
+icon = ExtResource("3_2wld8")
+icon_alignment = 2
+expand_icon = true
+
+[node name="fPassword" type="Button" parent="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Forgot password?"
+icon = ExtResource("3_2wld8")
+icon_alignment = 2
+expand_icon = true
+
+[node name="fPassword" type="VBoxContainer" parent="MarginContainer/PanelContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+script = SubResource("GDScript_yjhdy")
+
+[node name="LState" type="Label" parent="MarginContainer/PanelContainer/VBoxContainer/fPassword"]
+layout_mode = 2
+text = "Login"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="MarginContainer/PanelContainer/VBoxContainer/fPassword"]
+layout_mode = 2
+size_flags_vertical = 3
+placeholder_text = "Email"
+alignment = 1
+
+[node name="post" type="Button" parent="MarginContainer/PanelContainer/VBoxContainer/fPassword"]
+layout_mode = 2
+text = "Send"
+
+[node name="Login" type="Button" parent="MarginContainer/PanelContainer/VBoxContainer/fPassword"]
+layout_mode = 2
+text = "Login?"
+icon = ExtResource("3_2wld8")
+icon_alignment = 2
+expand_icon = true
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/PanelContainer/VBoxContainer"]
 visible = false
@@ -232,16 +304,18 @@ text = "Sign Up"
 [node name="Login" type="Button" parent="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2"]
 layout_mode = 2
 text = "Login?"
+icon = ExtResource("3_2wld8")
+icon_alignment = 2
+expand_icon = true
 
-[connection signal="text_changed" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer/LineEdit" to="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer" method="_on_line_edit_text_changed"]
 [connection signal="text_submitted" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer/LineEdit" to="." method="login_sub"]
-[connection signal="text_changed" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer/LineEdit2" to="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer" method="_on_line_edit_2_text_changed"]
 [connection signal="text_submitted" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer/LineEdit2" to="." method="login_sub"]
 [connection signal="pressed" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer/Login" to="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer" method="_on_login_pressed"]
 [connection signal="pressed" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer/Sign" to="MarginContainer/PanelContainer" method="_on_sign_pressed"]
-[connection signal="text_changed" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2/LineEdit" to="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2" method="_on_line_edit_text_changed"]
+[connection signal="pressed" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer/fPassword" to="MarginContainer/PanelContainer" method="_on_f_password_pressed"]
+[connection signal="pressed" from="MarginContainer/PanelContainer/VBoxContainer/fPassword/post" to="MarginContainer/PanelContainer/VBoxContainer/fPassword" method="_on_post_pressed"]
+[connection signal="pressed" from="MarginContainer/PanelContainer/VBoxContainer/fPassword/Login" to="MarginContainer/PanelContainer" method="_on_login_pressed"]
 [connection signal="text_submitted" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2/LineEdit" to="." method="sign_sub"]
-[connection signal="text_changed" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2/LineEdit2" to="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2" method="_on_line_edit_2_text_changed"]
 [connection signal="text_submitted" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2/LineEdit2" to="." method="sign_sub"]
 [connection signal="pressed" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2/Sign" to="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2" method="_on_sign_pressed"]
 [connection signal="pressed" from="MarginContainer/PanelContainer/VBoxContainer/VBoxContainer2/Login" to="MarginContainer/PanelContainer" method="_on_login_pressed"]

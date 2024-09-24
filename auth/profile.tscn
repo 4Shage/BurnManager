@@ -6,6 +6,10 @@ script/source = "extends Control
 
 func _ready():
 	Data.cs = \"profile\"
+
+func _process(delta: float) -> void:
+	if Input.is_action_just_pressed(\"AL\"): 
+		Manager.chScene(\"test\")
 "
 
 [sub_resource type="GDScript" id="GDScript_uaa3h"]

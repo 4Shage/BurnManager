@@ -1,5 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://53bklxhfjm1r"]
 
+[ext_resource type="Theme" uid="uid://cmv6syjtux7aq" path="res://themes/light.tres" id="1_s4gsj"]
 [ext_resource type="Script" path="res://user.gd" id="1_thkdi"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_tw2kn"]
@@ -7,13 +8,18 @@ font_size = 36
 
 [sub_resource type="GDScript" id="GDScript_dmp1c"]
 script/source = "extends ItemList
-
+@export var user: UserRes
+signal readS
+var data 
 func read():
+	data = user.getAllDays()
 	self.clear()
-	for e in Data.users[Data.selUser][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]]:
+	if !user.dayOn.has(Data.date[\"year\"]) or !user.dayOn[Data.date[\"year\"]].has(Data.date[\"month\"]):
+		return
+	for e in user.dayOn[Data.date[\"year\"]][Data.date[\"month\"]]:
 		self.add_item(str(e)+\".\"+str(Data.date[\"month\"])+\".\"+str(Data.date[\"year\"])+ \"   \"+ str(Data.users[Data.selUser][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]].get(e)))
-		for i in Data.users[Data.selUser][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]][e]:
-			match Data.users[Data.selUser][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]][e][i]:
+		for i in user.dayOn[Data.date[\"year\"]][Data.date[\"month\"]][e]:
+			match user.dayOn[Data.date[\"year\"]][Data.date[\"month\"]][e][i]:
 				\"1\":
 					self.set_item_custom_fg_color(self.item_count - 1,Color(255,255,0))
 				\"0\":
@@ -25,13 +31,17 @@ func read():
 
 
 func _ready():
+	user = UserRes.new()
+	if Data.selUser:
+		user.deserialize(Data.selUser)
+	self.readS.connect(read.bind())
 	read()
 
 
 func _on_delete_pressed() -> void:
 	for e in self.get_selected_items():
 		var txt : String = self.get_item_text(e).get_slice(\".\",0)
-		Data.users[Data.selUser][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]].erase(int(txt))
+		user.dayOn[Data.date[\"year\"]][Data.date[\"month\"]].erase(int(txt))
 		self.remove_item(e)
 	self.deselect_all()
 
@@ -41,8 +51,8 @@ func _on_nb_pressed() -> void:
 	for e in self.get_selected_items():
 		var txt : String = self.get_item_text(e).get_slice(\".\",0)
 		self.set_item_custom_fg_color(e,Color(255,0,0))
-		for i in Data.users[Data.selUser][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]][int(txt)]:
-			Data.users[Data.selUser][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]][int(txt)][i] = \"-1\"
+		for i in user.dayOn[Data.date[\"year\"]][Data.date[\"month\"]][int(txt)]:
+			user.dayOn[Data.date[\"year\"]][Data.date[\"month\"]][int(txt)][i] = \"-1\"
 	self.deselect_all()
 
 
@@ -50,8 +60,8 @@ func _on_np_pressed() -> void:
 	for e in self.get_selected_items():
 		var txt : String = self.get_item_text(e).get_slice(\".\",0)
 		self.set_item_custom_fg_color(e,Color(255,255,0))
-		for i in Data.users[Data.selUser][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]][int(txt)]:
-			Data.users[Data.selUser][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]][int(txt)][i] = \"1\"
+		for i in user.dayOn[Data.date[\"year\"]][Data.date[\"month\"]][int(txt)]:
+			user.dayOn[Data.date[\"year\"]][Data.date[\"month\"]][int(txt)][i] = \"1\"
 	self.deselect_all()
 
 
@@ -65,14 +75,6 @@ func _on_item_activated(index: int) -> void:
 	self.deselect(index)
 "
 
-[sub_resource type="GDScript" id="GDScript_34jkj"]
-script/source = "extends LineEdit
-
-
-func _ready():
-	self.text = str(Data.date[\"month\"])
-"
-
 [sub_resource type="GDScript" id="GDScript_0f16t"]
 script/source = "extends LineEdit
 
@@ -84,46 +86,43 @@ func _ready():
 [sub_resource type="GDScript" id="GDScript_nhcpy"]
 script/source = "extends Button
 
-@onready var day := $\"../../BoxContainer/LineEdit\"
-@onready var month := $\"../../BoxContainer/LineEdit2\"
-@onready var year := $\"../../BoxContainer/LineEdit3\"
-@onready var item_list := $\"../../..\"
+@onready var day :LineEdit= $\"../../BoxContainer/LineEdit\"
+@onready var month: OptionButton = $\"../../BoxContainer/month\"
+
+@onready var year :LineEdit= $\"../../BoxContainer/LineEdit3\"
+@onready var item_list :ItemList= $\"../../..\"
 
 @onready var hour: LineEdit = $\"../LineEdit\"
 @onready var min: LineEdit = $\"../LineEdit2\"
-
+@export var user: UserRes
 
 
 func _on_pressed():
-	var hr : String = str(hour.text)+\":\"+str(min.text)
-	Data.users[Data.selUser][\"dayOn\"][int(year.text)][int(month.text)][int(day.text)] = {}
-	Data.users[Data.selUser][\"dayOn\"][int(year.text)][int(month.text)][int(day.text)][hr] = \"0\"
-	Manager.saveUser(Data.selUser,%MP.user)
-	item_list.read()
+	user = UserRes.new()
+	user.deserialize(Data.selUser)
+	var hr : float = float(str(hour.text)+\".\"+str(min.text))
+	user.addDay(int(day.text),int(month.get_item_text(month.get_selected())),int(year.text),hr)
+	#if not user.dayOn.has(int(year.text)):
+		#user.dayOn[int(year.text)] = {}
+	#if not user.dayOn[int(year.text)].has(int(month.get_item_text(month.get_selected()))):
+		#user.dayOn[int(year.text)][int(month.get_item_text(month.get_selected()))] = {}
+		#
+	#user.dayOn[int(year.text)][int(month.get_item_text(month.get_selected()))][int(day.text)] = {}
+	#user.dayOn[int(year.text)][int(month.get_item_text(month.get_selected()))][int(day.text)][hr] = \"0\"
+	user.serialize()
+	item_list.emit_signal(\"readS\")
 "
 
 [sub_resource type="GDScript" id="GDScript_747ai"]
 script/source = "extends Button
 @onready var panel = %MP
 
-var user : Dictionary = {
-		\"name\":\"Paweł Harasymowicz\",
-		\"cost\":\"60\",
-		\"borrowed\":\"0\",
-		\"startDate\":\"01.06\",
-		\"endDate\":\"01.09\",
-		\"dayOn\":{
-			1:0,
-			3:0
-		},
-		\"dayOff\":{
-			\"12.08\":0
-		},
-		\"wild\":0
-	}
+var user: UserRes
 
 func _on_pressed():
-	Manager.saveUser(Data.selUser,panel.user)
+	user = panel.user
+	user.serialize()
+	Manager.userAddToDB()
 "
 
 [node name="user" type="Control"]
@@ -133,6 +132,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_s4gsj")
 
 [node name="AspectRatioContainer" type="BoxContainer" parent="."]
 layout_mode = 1
@@ -262,11 +262,34 @@ layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "31"
 
-[node name="LineEdit2" type="LineEdit" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList/BoxContainer3/BoxContainer"]
+[node name="month" type="OptionButton" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList/BoxContainer3/BoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-placeholder_text = "12"
-script = SubResource("GDScript_34jkj")
+selected = 0
+item_count = 12
+popup/item_0/text = "1"
+popup/item_1/text = "2"
+popup/item_1/id = 1
+popup/item_2/text = "3"
+popup/item_2/id = 2
+popup/item_3/text = "4"
+popup/item_3/id = 3
+popup/item_4/text = "5"
+popup/item_4/id = 4
+popup/item_5/text = "6"
+popup/item_5/id = 5
+popup/item_6/text = "7"
+popup/item_6/id = 6
+popup/item_7/text = "8"
+popup/item_7/id = 7
+popup/item_8/text = "9"
+popup/item_8/id = 8
+popup/item_9/text = "10"
+popup/item_9/id = 9
+popup/item_10/text = "11"
+popup/item_10/id = 10
+popup/item_11/text = "12"
+popup/item_11/id = 11
 
 [node name="LineEdit3" type="LineEdit" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList/BoxContainer3/BoxContainer"]
 layout_mode = 2

@@ -1,0 +1,190 @@
+[gd_scene load_steps=7 format=3 uid="uid://b17msl1p2af2x"]
+
+[ext_resource type="Theme" uid="uid://cmv6syjtux7aq" path="res://themes/light.tres" id="1_0kisp"]
+
+[sub_resource type="GDScript" id="GDScript_jtqnd"]
+script/source = "extends Control
+
+
+func _init() -> void:
+	Data.allDays.clear()
+	for e in Data.users:
+		if Data.users[e][\"dayOn\"].has(Data.date[\"year\"]) and Data.users[e][\"dayOn\"][Data.date[\"year\"]].has(Data.date[\"month\"]):
+			var val: Dictionary = Data.users[e][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]]
+			for i in val:
+				if !Data.allDays.has(i):
+					Data.allDays[i] = {
+						\"usrs\":{Data.users[e][\"shortName\"]:0},
+						\"hour\":{Data.users[e][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]][i]:0}
+						}
+				else:
+					Data.allDays[i][\"usrs\"][Data.users[e][\"shortName\"]] = 0
+					if !Data.allDays[i][\"hour\"].has(Data.users[e][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]][i]):
+						Data.allDays[i][\"hour\"][Data.users[e][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]][i]] = 0
+				for x in Data.allDays[i][\"hour\"]:
+					Data.allDays[i][\"hour\"].erase(x)
+					var ex :String = x
+					Data.allDays[i][\"hour\"][ex] = 0
+"
+
+[sub_resource type="GDScript" id="GDScript_660b2"]
+script/source = "extends Label
+
+const M : Array[String] = [\"JANUARY\", \"FEBRUARY\", \"MARCH\", \"APRIL\", \"MAY\", \"JUNE\", \"JULY\", \"AUGUST\", \"SEPTEMBER\", \"OCTOBER\", \"NOVEMBER\", \"DECEMBER\"]
+
+
+func _ready() -> void:
+	var t : String = M[Data.date[\"month\"]-1]
+	self.text = t
+"
+
+[sub_resource type="GDScript" id="GDScript_1nhjn"]
+script/source = "extends GridContainer
+
+var daysIT : Dictionary = {}
+
+func _ready() -> void:
+	for e in Data.monthDays+1:
+		if e == 0:
+			continue
+		var ch := ItemList.new()
+		ch.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		ch.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		ch.name = str(e)
+		daysIT[str(e)] = ch
+		self.add_child(ch)
+		if Data.allDays.has(e):
+			ch.add_item(str(Data.allDays[e][\"hour\"]).replace(\": 0\",str(Data.allDays[e][\"usrs\"])))
+"
+
+[sub_resource type="GDScript" id="GDScript_0m8yq"]
+script/source = "extends FlowContainer
+#
+#func _ready():
+	#var i : int = 1
+	#while i <= Manager.monthDays:
+		#var il : ItemList = ItemList.new()
+		#il.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+		#var ie : int = 1
+		#while ie <= 8:
+			#il.add_item(str(i))
+			#ie += 1
+		#self.add_child(il)
+		#i += 1
+"
+
+[sub_resource type="GDScript" id="GDScript_cvjr1"]
+script/source = "extends Tree
+#
+#const weekdays :={
+	#0:\"pn\",
+	#1:\"wt\",
+	#2:\"śr\",
+	#3:\"czw\",
+	#4:\"pt\",
+	#5:\"sob\",
+	#6:\"nd\"
+#}
+#var month : Dictionary
+#
+#
+#var root := self.create_item()
+#
+#func _init():
+	#if month == {}:
+		#var curDay : int= Data.date[\"day\"]
+		#var curWeekDay : int = Manager.date[\"weekday\"]
+		#for e in Manager.monthDays+1:
+			#if e != 0:
+				#month[e] = 0
+		#for e in month:
+			#if e < curDay or e > curDay:
+				#month[e] = monthF(e - curDay)
+			#elif e == curDay:
+				#month[e] = monthF(0)
+		#for e in month:
+			#month[e] = {
+				#\"dz\":month[e],
+				#1:{},
+				#2:{},
+				#3:{},
+				#4:{},
+				#5:{},
+				#6:{},
+				#7:{},
+				#8:{}
+			#} 
+#
+#func _ready():
+	#var ch0 := create_item(root)
+	#var ch1 := create_item(root)
+	#var ch2 := create_item(root)
+	#var ch3 := create_item(root)
+	#var ch4 := create_item(root)
+	#var ch : Array = [ch0,ch1,ch2,ch3,ch4]
+	#for e in 7:
+		#root.set_text(e,weekdays[e])
+	#for e in month:
+		#var d :int = 0
+		#var de : int = e[\"dz\"]
+		#if e > 7:
+			#d = 1
+		#elif e > 14:
+			#d = 2
+		#elif e > 21:
+			#d = 3
+		#match de:
+			#1:
+				#ch[d].set_text(de-1,e)
+				#
+#
+#func monthF(dayTo:int):
+	#var day := DateTime.now()
+	#return day.add_days(dayTo).weekday
+"
+
+[node name="Calendar" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_0kisp")
+script = SubResource("GDScript_jtqnd")
+
+[node name="AspectRatioContainer" type="BoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+vertical = true
+
+[node name="Label" type="Label" parent="AspectRatioContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+script = SubResource("GDScript_660b2")
+
+[node name="GridContainer" type="GridContainer" parent="AspectRatioContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 7
+script = SubResource("GDScript_1nhjn")
+
+[node name="HBoxContainer" type="FlowContainer" parent="AspectRatioContainer"]
+visible = false
+layout_mode = 2
+script = SubResource("GDScript_0m8yq")
+
+[node name="Tree" type="Tree" parent="AspectRatioContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 7
+column_titles_visible = true
+hide_folding = true
+script = SubResource("GDScript_cvjr1")

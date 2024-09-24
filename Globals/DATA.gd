@@ -4,11 +4,12 @@ var auth
 const SC : Dictionary = {
 	"menu":"res://menu.tscn",
 	"auth":"res://auth/auth.tscn",
-	#"cal":"res://calendar.tscn",
+	"cal":"res://calendar.tscn",
 	"profile":"res://auth/profile.tscn",
 	"rules":"res://scenes/rules.tscn",
 	"ushub":"res://users_hub.tscn",
-	"us":"res://user.tscn"
+	"us":"res://user.tscn",
+	"test":"res://test_zone.tscn"
 }
 var cs : String :
 	set(new_val):
@@ -24,8 +25,9 @@ func _ready():
 	day[date["year"]][date["month"]][date["day"]] = {}
 	day[date["year"]][date["month"]][date["day"]][16.30] = 0
 const monthsDays : Array = [31,28,31,30,31,30,31,31,30,31,30,31]
+var allDays : Dictionary
 var date : Dictionary
-var selUser : int
+var selUser : String
 var users : Dictionary = {}
 var db : Dictionary = {}
 var monthDays : int
@@ -43,3 +45,12 @@ var sData : Dictionary = {
 var MC : Dictionary = {
 	"name":""
 }
+
+
+const dSett : Dictionary = {
+	"theme": {
+		"light":"res://themes/light.tres",
+		"dark":"res://themes/dark.tres"
+	}
+}
+var sett : Dictionary

@@ -1,4 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://e6iug4l8a5r0"]
+[gd_scene load_steps=6 format=3 uid="uid://e6iug4l8a5r0"]
+
+[ext_resource type="Theme" uid="uid://cmv6syjtux7aq" path="res://themes/light.tres" id="1_6k3oy"]
+[ext_resource type="Texture2D" uid="uid://dphkjk6nk328b" path="res://assets/icons/add_box_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" id="1_u11do"]
+
+[sub_resource type="GDScript" id="GDScript_k2asm"]
+script/source = "extends Control
+"
 
 [sub_resource type="GDScript" id="GDScript_p3edr"]
 script/source = "extends Button
@@ -33,6 +40,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = SubResource("GDScript_k2asm")
 
 [node name="AspectRatioContainer" type="BoxContainer" parent="."]
 layout_mode = 1
@@ -52,7 +60,10 @@ size_flags_horizontal = 3
 
 [node name="Button" type="Button" parent="AspectRatioContainer/BoxContainer/VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_6k3oy")
 text = "Dodaj podopiecznego"
+icon = ExtResource("1_u11do")
+expand_icon = true
 script = SubResource("GDScript_p3edr")
 
 [node name="ItemList" type="ItemList" parent="AspectRatioContainer/BoxContainer/VBoxContainer"]

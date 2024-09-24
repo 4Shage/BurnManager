@@ -23,7 +23,7 @@ signal token_exchanged(successful)
 signal token_refresh_succeeded(auth_result)
 signal logged_out()
 
-const RESPONSE_SIGNUP : String   = "identitytoolkit#SignupNewUserResponse"
+const RESPONSE_SIGNUP : String   = "identitytoolkit#SignupNewuserponse"
 const RESPONSE_SIGNIN : String   = "identitytoolkit#VerifyPasswordResponse"
 const RESPONSE_ASSERTION : String  = "identitytoolkit#VerifyAssertionResponse"
 const RESPONSE_USERDATA : String = "identitytoolkit#GetAccountInfoResponse"

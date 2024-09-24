@@ -1,0 +1,331 @@
+# LANGUAGE translation for BurnManager for the following files:
+# res://navbar.tscn
+# res://auth/auth.tscn
+#
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: BurnManager\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.5\n"
+
+#: navbar.tscn
+msgid "Menu"
+msgstr "Menu"
+
+#: navbar.tscn
+msgid "Harmonogram [WIP]"
+msgstr "Harmonogram [WIP]"
+
+#: navbar.tscn
+msgid "Podopieczni"
+msgstr "Podopieczni"
+
+#: navbar.tscn
+msgid "Regulamin"
+msgstr "Regulamin"
+
+#: navbar.tscn
+msgid "Profil"
+msgstr "Profil"
+
+#: auth/auth.tscn
+msgid "State"
+msgstr "Stan"
+
+#: auth/auth.tscn
+msgid "Login success!"
+msgstr "Logowanie zakończone"
+
+#: auth/auth.tscn
+msgid "Login"
+msgstr "Zaloguj"
+
+#: auth/auth.tscn
+msgid "Email"
+msgstr "Email"
+
+#: auth/auth.tscn
+msgid "Password"
+msgstr "Hasło"
+
+#: auth/auth.tscn
+msgid "Sign Up?"
+msgstr "Do rejestracji"
+
+#: auth/auth.tscn
+msgid "Forgot password?"
+msgstr "Zapomniałeś hasło ?"
+
+#: auth/auth.tscn
+msgid "Send"
+msgstr "Wyślij"
+
+#: auth/auth.tscn
+msgid "Login?"
+msgstr "Do logowania"
+
+#: auth/auth.tscn
+msgid "Sign up success!"
+msgstr "Rejestracja zakończona"
+
+#: auth/auth.tscn
+msgid "Sign up"
+msgstr "Zarejestruj"
+
+#: auth/auth.tscn
+msgid "Sign Up"
+msgstr "Zarejestruj"
+
+msgid "New Code Region"
+msgstr ""
+
+msgid "Pick a color from the screen."
+msgstr "Wybierz kolor z ekranu."
+
+msgid "Pick a color from the application window."
+msgstr ""
+
+msgid ""
+"Color: #%s\n"
+"LMB: Apply color\n"
+"RMB: Remove preset"
+msgstr ""
+
+msgid ""
+"Color: #%s\n"
+"LMB: Apply color"
+msgstr ""
+
+msgid "Enter a hex code (\"#ff0000\") or named color (\"red\")."
+msgstr ""
+
+msgid "Select a picker shape."
+msgstr ""
+
+msgid "Select a picker mode."
+msgstr ""
+
+msgid "Hex code or named color"
+msgstr ""
+
+msgid "Add current color as a preset."
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "OK"
+msgstr ""
+
+msgid "Alert!"
+msgstr "Uwaga!"
+
+msgid "Please Confirm..."
+msgstr ""
+
+msgid "Network"
+msgstr ""
+
+msgid ""
+"File \"%s\" already exists.\n"
+"Do you want to overwrite it?"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Select Current Folder"
+msgstr ""
+
+msgid "Select This Folder"
+msgstr ""
+
+msgid "You don't have permission to access contents of this folder."
+msgstr ""
+
+msgid "All Recognized"
+msgstr ""
+
+msgid "All Files"
+msgstr ""
+
+msgid "Open a File"
+msgstr ""
+
+msgid "Open File(s)"
+msgstr ""
+
+msgid "Open a Directory"
+msgstr ""
+
+msgid "Open a File or Directory"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Save a File"
+msgstr ""
+
+msgid "Go to previous folder."
+msgstr ""
+
+msgid "Go to next folder."
+msgstr ""
+
+msgid "Go to parent folder."
+msgstr ""
+
+msgid "Path:"
+msgstr ""
+
+msgid "Refresh files."
+msgstr ""
+
+msgid "Toggle the visibility of hidden files."
+msgstr ""
+
+msgid "Create a new folder."
+msgstr ""
+
+msgid "Directories & Files:"
+msgstr ""
+
+msgid "File:"
+msgstr ""
+
+msgid "Create Folder"
+msgstr ""
+
+msgid "Name:"
+msgstr ""
+
+msgid "Could not create folder."
+msgstr ""
+
+msgid "Invalid extension, or empty filename."
+msgstr ""
+
+msgid "Zoom Out"
+msgstr ""
+
+msgid "Zoom Reset"
+msgstr ""
+
+msgid "Zoom In"
+msgstr ""
+
+msgid "Toggle the visual grid."
+msgstr ""
+
+msgid "Toggle snapping to the grid."
+msgstr ""
+
+msgid "Change the snapping distance."
+msgstr ""
+
+msgid "Toggle the graph minimap."
+msgstr ""
+
+msgid "Automatically arrange selected nodes."
+msgstr ""
+
+msgid "Same as Layout Direction"
+msgstr ""
+
+msgid "Auto-Detect Direction"
+msgstr ""
+
+msgid "Left-to-Right"
+msgstr ""
+
+msgid "Right-to-Left"
+msgstr ""
+
+msgid "Left-to-Right Mark (LRM)"
+msgstr ""
+
+msgid "Right-to-Left Mark (RLM)"
+msgstr ""
+
+msgid "Start of Left-to-Right Embedding (LRE)"
+msgstr ""
+
+msgid "Start of Right-to-Left Embedding (RLE)"
+msgstr ""
+
+msgid "Start of Left-to-Right Override (LRO)"
+msgstr ""
+
+msgid "Start of Right-to-Left Override (RLO)"
+msgstr ""
+
+msgid "Pop Direction Formatting (PDF)"
+msgstr ""
+
+msgid "Arabic Letter Mark (ALM)"
+msgstr ""
+
+msgid "Left-to-Right Isolate (LRI)"
+msgstr ""
+
+msgid "Right-to-Left Isolate (RLI)"
+msgstr ""
+
+msgid "First Strong Isolate (FSI)"
+msgstr ""
+
+msgid "Pop Direction Isolate (PDI)"
+msgstr ""
+
+msgid "Zero-Width Joiner (ZWJ)"
+msgstr ""
+
+msgid "Zero-Width Non-Joiner (ZWNJ)"
+msgstr ""
+
+msgid "Word Joiner (WJ)"
+msgstr ""
+
+msgid "Soft Hyphen (SHY)"
+msgstr ""
+
+msgid "Cut"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Paste"
+msgstr ""
+
+msgid "Select All"
+msgstr ""
+
+msgid "Clear"
+msgstr ""
+
+msgid "Undo"
+msgstr ""
+
+msgid "Redo"
+msgstr ""
+
+msgid "Text Writing Direction"
+msgstr ""
+
+msgid "Display Control Characters"
+msgstr ""
+
+msgid "Insert Control Character"
+msgstr ""

@@ -1,0 +1,110 @@
+[gd_scene load_steps=4 format=3 uid="uid://uv4rhu5p87ax"]
+
+[sub_resource type="GDScript" id="GDScript_t7rym"]
+script/source = "extends Container
+"
+
+[sub_resource type="GDScript" id="GDScript_rjxqh"]
+script/source = "extends Button
+
+
+func _pressed() -> void:
+	var ch: Window = Window.new()
+	var l : = Label.new()
+	l.text = \"elo\"
+	ch.add_child(l)
+	self.add_child(ch)
+	ch.position.x += 200
+	ch.position.y += 200
+"
+
+[sub_resource type="GDScript" id="GDScript_knhpd"]
+script/source = "extends BoxContainer
+
+var current_year: int = 2024
+var current_month: int = 9
+var days_in_month: int = 31  # Default to 31 days
+
+@onready var grid_container: GridContainer = $GridContainer
+
+func _ready():
+	vertical = true
+	days_in_month = get_days_in_month(current_year, current_month)
+	create_monthly_schedule()
+func get_days_in_month(year: int, month: int) -> int:
+	var date = Time.get_date_dict_from_unix_time(Time.get_unix_time_from_datetime_dict({\"year\": year, \"month\": month, \"day\": 1}))
+	var next_month = Time.get_date_dict_from_unix_time(Time.get_unix_time_from_datetime_dict({\"year\": year, \"month\": month + 1, \"day\": 1}))
+	var days = next_month[\"day\"] - date[\"day\"]
+	return days if month != 12 else 31
+func create_monthly_schedule():
+	create_day_headers()
+	create_calendar_days()
+
+func create_day_headers():
+	var day_names = [\"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\", \"Sat\", \"Sun\"]
+	for day_name in day_names:
+		var label = Label.new()
+		label.text = day_name
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		grid_container.add_child(label)
+
+func create_calendar_days():
+	var first_day_of_week = get_first_day_of_month(current_year, current_month)
+	
+	# Add empty spaces for days from the previous month
+	for i in range(first_day_of_week):
+		grid_container.add_child(Control.new())
+	
+	# Add days of the current month
+	for day in range(1, days_in_month + 1):
+		var button = Button.new()
+		button.text = str(day)
+		button.name = \"Day_\" + str(day)
+		button.pressed.connect(_on_day_button_pressed.bind(day))
+		grid_container.add_child(button)
+	
+	# Add empty spaces for days from the next month
+	var total_cells = 7 * ceil((first_day_of_week + days_in_month) / 7.0)
+	var remaining_cells = total_cells - (first_day_of_week + days_in_month)
+	for i in range(remaining_cells):
+		grid_container.add_child(Control.new())
+
+func get_first_day_of_month(year: int, month: int) -> int:
+	var date = Time.get_date_dict_from_unix_time(Time.get_unix_time_from_datetime_dict({\"year\": year, \"month\": month, \"day\": 1}))
+	return date[\"weekday\"] - 1  # Adjust to 0-based index where 0 is Monday
+
+func _on_day_button_pressed(day: int):
+	print(\"Clicked day: \", day)
+	# Add logic for assigning tasks to the day here
+"
+
+[node name="TestZone" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Container" type="Container" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_t7rym")
+
+[node name="Button" type="Button" parent="Container"]
+layout_mode = 2
+text = "Window"
+script = SubResource("GDScript_rjxqh")
+
+[node name="BoxContainer" type="BoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_knhpd")

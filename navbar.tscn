@@ -1,12 +1,29 @@
-[gd_scene load_steps=7 format=3 uid="uid://cmhmc6iyawmpv"]
+[gd_scene load_steps=13 format=3 uid="uid://cmhmc6iyawmpv"]
+
+[ext_resource type="Theme" uid="uid://cmv6syjtux7aq" path="res://themes/light.tres" id="1_jy7g6"]
+[ext_resource type="Texture2D" uid="uid://8ed2bevrjetr" path="res://assets/icons/home_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" id="2_8ke3q"]
+[ext_resource type="Texture2D" uid="uid://c06apcsmqa4ff" path="res://assets/icons/calendar_today_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" id="3_hbajd"]
+[ext_resource type="Texture2D" uid="uid://ccfsy20f3uupw" path="res://assets/icons/groups_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" id="4_jsgys"]
+[ext_resource type="Texture2D" uid="uid://dwoek6iidlbs1" path="res://assets/icons/rule_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" id="5_2d0ge"]
+[ext_resource type="Texture2D" uid="uid://d2wks6gficul6" path="res://assets/icons/account_circle_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" id="6_8kg00"]
 
 [sub_resource type="GDScript" id="GDScript_51dkr"]
 script/source = "extends Control
 
+const fadeSpeed : float = 0.1
+
+func _init() -> void:
+	scale.x = 0
 
 func _process(_delta):
+	if scale.x < 1:
+		scale.x += fadeSpeed
 	if !GlobalControl.swiping[\"navbar\"]:
 		queue_free()
+
+func free() -> void:
+	while scale.x > 0:
+		scale.x -= fadeSpeed
 "
 
 [sub_resource type="GDScript" id="GDScript_28yiv"]
@@ -51,7 +68,6 @@ func _on_pressed() -> void:
 "
 
 [node name="navbar" type="Control"]
-layout_direction = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -60,6 +76,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme = ExtResource("1_jy7g6")
 script = SubResource("GDScript_51dkr")
 
 [node name="AspectRatioContainer" type="BoxContainer" parent="."]
@@ -78,6 +95,16 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 3
 
+[node name="ColorRect" type="ColorRect" parent="AspectRatioContainer/BoxContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+color = Color(0.956863, 0.956863, 0.956863, 0.376471)
+
 [node name="VBoxContainer" type="VBoxContainer" parent="AspectRatioContainer/BoxContainer/Panel"]
 layout_mode = 1
 anchors_preset = 15
@@ -95,17 +122,22 @@ size_flags_vertical = 0
 [node name="Menu" type="Button" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer"]
 layout_mode = 2
 text = "Menu"
+icon = ExtResource("2_8ke3q")
+expand_icon = true
 script = SubResource("GDScript_28yiv")
 
 [node name="Harmonogram" type="Button" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer"]
 layout_mode = 2
-disabled = true
-text = "Harmonogram"
+text = "Harmonogram [WIP]"
+icon = ExtResource("3_hbajd")
+expand_icon = true
 script = SubResource("GDScript_6y3qv")
 
 [node name="Podopieczni" type="Button" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer"]
 layout_mode = 2
 text = "Podopieczni"
+icon = ExtResource("4_jsgys")
+expand_icon = true
 script = SubResource("GDScript_6xvxy")
 
 [node name="BoxContainer" type="BoxContainer" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer"]
@@ -116,12 +148,16 @@ size_flags_vertical = 10
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Regulamin"
+icon = ExtResource("5_2d0ge")
+expand_icon = true
 script = SubResource("GDScript_8vufk")
 
 [node name="Profil" type="Button" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/BoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Profil"
+icon = ExtResource("6_8kg00")
+expand_icon = true
 script = SubResource("GDScript_ihp5e")
 
 [connection signal="pressed" from="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/Menu" to="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/Menu" method="_on_pressed"]

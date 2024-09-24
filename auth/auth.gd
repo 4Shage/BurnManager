@@ -14,7 +14,7 @@ func _ready():
 	if FB.check_auth_file():
 		Data.auth = FB.auth
 		state.text = "Login success!"
-		Manager.chScene("profile")
+		Manager.chScene("menu")
 
 func _process(_delta):
 	if Input.is_action_just_pressed("AL"): 

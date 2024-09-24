@@ -1,5 +1,7 @@
 extends Node
 
+var olds : Dictionary
+
 func chScene(sc:String):
 	if Data.SC.has(sc):
 		get_tree().change_scene_to_file(Data.SC.get(sc))
@@ -10,7 +12,7 @@ func chScene(sc:String):
 
 func addUser(namE:String,shortName:String,cost:float = 0,startDate:String = "",endDate:String = "",dayOn:Dictionary=Data.day,wild:Dictionary={},dayOff:Dictionary={}):
 	var rn := RandomNumberGenerator.new()
-	var rng : int= rn.seed
+	var rng: String = str(rn.seed)
 	Data.users[rng] = {
 		"shortName":shortName,
 		"name":namE,
@@ -54,8 +56,12 @@ func userAddToDB():
 	Data.db = {}
 	for e in Data.users:
 		Data.db[Data.users[e]["shortName"]] = e
+	print(Data.db)
 
 func _ready():
+	var FB : FirebaseAuth = Firebase.Auth
+	if FB.check_auth_file():
+		Data.auth = FB.auth
 	if FileAccess.file_exists("user://users.cfg"):
 		loadUsrs()
 	userAddToDB()
@@ -70,10 +76,23 @@ func _ready():
 			Data.monthDays += 1
 	print_debug(Data.monthDays)
 
-#func _process(_delta: float) -> void:
-	#if Data.auth == null:
-		#if Data.cs != "auth":
-			#chScene("auth")
+
+
+func _process(_delta: float) -> void:
+	if Data.auth == null:
+		if Data.cs != "auth":
+			chScene("auth")
+	else:
+		if olds.has("users"):
+			if olds["users"] != Data.users:
+				var r = await Firebase.Storage.ref(Data.auth.localid+"/users.cfg").delete()
+				r = await Firebase.Storage.ref(Data.auth.localid+"/users.cfg").put_file("user://users.cfg")
+				olds["users"] = Data.users
+		else:
+			olds["users"] = {}
+			var r = await Firebase.Storage.ref(Data.auth.localid+"/users.cfg").delete()
+			#r = await Firebase.Storage.ref(Data.auth.localid+"/users.cfg").put_file("user://users.cfg")
+			olds["users"] = Data.users
 
 var cal: Dictionary
 func calD():
@@ -95,12 +114,13 @@ func calD():
 
 func saveSelf():
 	var col_id = "users"
-	if Data.auth.localid:
-		var task : FirestoreTask
-		var collection : FirestoreCollection = Firebase.Firestore.collection(col_id)
-		task = Firebase.Firestore.document(Data.auth.localid, Data.sData)
-		var data : Dictionary = {
-			"name": Data.auth.localid,
-			"fields": Data.sData,
-			"createTime":Time.get_date_string_from_system()
-		}
+	#if Data.auth.localid:
+		#var collection : FirestoreCollection = Firebase.Firestore.collection(col_id)
+		#var data : Dictionary = {
+			#"name": Data.auth.localid,
+			#"fields": Data.sData,
+			#"createTime":Time.get_date_string_from_system()
+		#}
+		#var task : FirestoreTask = collection.update(data)
+		#task = Firebase.Firestore.document(Data.auth.localid, Data.sData)
+		

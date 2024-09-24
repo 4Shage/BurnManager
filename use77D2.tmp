@@ -1,0 +1,354 @@
+[gd_scene load_steps=10 format=3 uid="uid://53bklxhfjm1r"]
+
+[ext_resource type="Theme" uid="uid://cmv6syjtux7aq" path="res://themes/light.tres" id="1_s4gsj"]
+[ext_resource type="Script" path="res://user.gd" id="1_thkdi"]
+[ext_resource type="Script" path="res://cres/userRes.gd" id="3_vlxdg"]
+
+[sub_resource type="Resource" id="Resource_px8qj"]
+script = ExtResource("3_vlxdg")
+id = 0
+shortName = "PH"
+name = "Paweł Harasymowicz"
+cost = 60.0
+borrowed = 0.0
+startDate = "10.07.2024"
+endDate = "30.08.2024"
+dayOn = {}
+
+[sub_resource type="LabelSettings" id="LabelSettings_tw2kn"]
+font_size = 36
+
+[sub_resource type="GDScript" id="GDScript_dmp1c"]
+script/source = "extends ItemList
+
+signal readS
+
+func read():
+	self.clear()
+	if !Data.users[Data.selUser][\"dayOn\"].has(Data.date[\"year\"]) or !Data.users[Data.selUser][\"dayOn\"][Data.date[\"year\"]].has(Data.date[\"month\"]):
+		return
+	for e in Data.users[Data.selUser][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]]:
+		self.add_item(str(e)+\".\"+str(Data.date[\"month\"])+\".\"+str(Data.date[\"year\"])+ \"   \"+ str(Data.users[Data.selUser][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]].get(e)))
+		for i in Data.users[Data.selUser][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]][e]:
+			match Data.users[Data.selUser][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]][e][i]:
+				\"1\":
+					self.set_item_custom_fg_color(self.item_count - 1,Color(255,255,0))
+				\"0\":
+					self.set_item_custom_fg_color(self.item_count - 1,Color(0,255,0))
+				\"-1\":
+					self.set_item_custom_fg_color(self.item_count - 1,Color(255,0,0))
+				_:
+					printerr(\"Overflow\")
+
+
+func _ready():
+	self.readS.connect(read.bind())
+	read()
+
+
+func _on_delete_pressed() -> void:
+	for e in self.get_selected_items():
+		var txt : String = self.get_item_text(e).get_slice(\".\",0)
+		Data.users[Data.selUser][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]].erase(int(txt))
+		self.remove_item(e)
+	self.deselect_all()
+
+
+
+func _on_nb_pressed() -> void:
+	for e in self.get_selected_items():
+		var txt : String = self.get_item_text(e).get_slice(\".\",0)
+		self.set_item_custom_fg_color(e,Color(255,0,0))
+		for i in Data.users[Data.selUser][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]][int(txt)]:
+			Data.users[Data.selUser][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]][int(txt)][i] = \"-1\"
+	self.deselect_all()
+
+
+func _on_np_pressed() -> void:
+	for e in self.get_selected_items():
+		var txt : String = self.get_item_text(e).get_slice(\".\",0)
+		self.set_item_custom_fg_color(e,Color(255,255,0))
+		for i in Data.users[Data.selUser][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]][int(txt)]:
+			Data.users[Data.selUser][\"dayOn\"][Data.date[\"year\"]][Data.date[\"month\"]][int(txt)][i] = \"1\"
+	self.deselect_all()
+
+
+func _on_item_selected(index: int) -> void:
+	await get_tree().create_timer(8.0).timeout
+	self.deselect_all()
+
+
+func _on_item_activated(index: int) -> void:
+	self.set_item_custom_fg_color(index,Color(0,255,0))
+	self.deselect(index)
+"
+
+[sub_resource type="GDScript" id="GDScript_0f16t"]
+script/source = "extends LineEdit
+
+
+func _ready():
+	self.text = str(Data.date[\"year\"])
+"
+
+[sub_resource type="GDScript" id="GDScript_nhcpy"]
+script/source = "extends Button
+
+@onready var day :LineEdit= $\"../../BoxContainer/LineEdit\"
+@onready var month: OptionButton = $\"../../BoxContainer/month\"
+
+@onready var year :LineEdit= $\"../../BoxContainer/LineEdit3\"
+@onready var item_list :ItemList= $\"../../..\"
+
+@onready var hour: LineEdit = $\"../LineEdit\"
+@onready var min: LineEdit = $\"../LineEdit2\"
+
+
+
+func _on_pressed():
+	var hr : String = str(hour.text)+\":\"+str(min.text)
+	if not Data.users[Data.selUser][\"dayOn\"].has(int(year.text)):
+		Data.users[Data.selUser][\"dayOn\"][int(year.text)] = {}
+	if not Data.users[Data.selUser][\"dayOn\"][int(year.text)].has(int(month.get_item_text(month.get_selected()))):
+		Data.users[Data.selUser][\"dayOn\"][int(year.text)][int(month.get_item_text(month.get_selected()))] = {}
+		
+	Data.users[Data.selUser][\"dayOn\"][int(year.text)][int(month.get_item_text(month.get_selected()))][int(day.text)] = {}
+	Data.users[Data.selUser][\"dayOn\"][int(year.text)][int(month.get_item_text(month.get_selected()))][int(day.text)][hr] = \"0\"
+	Manager.saveUser(Data.selUser,%MP.user)
+	item_list.emit_signal(\"readS\")
+"
+
+[sub_resource type="GDScript" id="GDScript_747ai"]
+script/source = "extends Button
+@onready var panel = %MP
+
+var user : Dictionary = {
+		\"name\":\"Paweł Harasymowicz\",
+		\"cost\":\"60\",
+		\"borrowed\":\"0\",
+		\"startDate\":\"01.06\",
+		\"endDate\":\"01.09\",
+		\"dayOn\":{
+			1:0,
+			3:0
+		},
+		\"dayOff\":{
+			\"12.08\":0
+		},
+		\"wild\":0
+	}
+
+func _on_pressed():
+	Manager.saveUser(Data.selUser,panel.user)
+"
+
+[node name="user" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_s4gsj")
+
+[node name="AspectRatioContainer" type="BoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BoxContainer" type="BoxContainer" parent="AspectRatioContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MP" type="Panel" parent="AspectRatioContainer/BoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("1_thkdi")
+userRes = SubResource("Resource_px8qj")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AspectRatioContainer/BoxContainer/MP"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -273.0
+offset_right = 274.0
+offset_bottom = 50.0
+grow_horizontal = 2
+
+[node name="LineEdit" type="LineEdit" parent="AspectRatioContainer/BoxContainer/MP/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="AspectRatioContainer/BoxContainer/MP/HBoxContainer"]
+layout_mode = 2
+text = "/"
+label_settings = SubResource("LabelSettings_tw2kn")
+
+[node name="LineEdit2" type="LineEdit" parent="AspectRatioContainer/BoxContainer/MP/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AspectRatioContainer/BoxContainer/MP"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -217.0
+offset_right = 492.0
+offset_bottom = 165.0
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer"]
+layout_mode = 2
+
+[node name="BoxContainer" type="BoxContainer" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/HBoxContainer/BoxContainer"]
+layout_mode = 2
+text = "Za godzine :"
+
+[node name="LineEdit" type="LineEdit" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/HBoxContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "60"
+
+[node name="BoxContainer4" type="BoxContainer" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/HBoxContainer/BoxContainer4"]
+layout_mode = 2
+text = "Ma jeszcze zapłacić : "
+
+[node name="LineEdit" type="LineEdit" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/HBoxContainer/BoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "0"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BoxContainer2" type="BoxContainer" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="np" type="Button" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/BoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Nieobecność - zgłoszona
+"
+
+[node name="nb" type="Button" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/BoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Nieobecność - nie zgłoszona
+"
+
+[node name="delete" type="Button" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/BoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = " Usuń 
+"
+
+[node name="ItemList" type="ItemList" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+script = SubResource("GDScript_dmp1c")
+
+[node name="BoxContainer3" type="BoxContainer" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -66.0
+grow_horizontal = 2
+grow_vertical = 0
+vertical = true
+
+[node name="BoxContainer" type="BoxContainer" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList/BoxContainer3"]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList/BoxContainer3/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "31"
+
+[node name="month" type="OptionButton" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList/BoxContainer3/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 0
+item_count = 12
+popup/item_0/text = "1"
+popup/item_1/text = "2"
+popup/item_1/id = 1
+popup/item_2/text = "3"
+popup/item_2/id = 2
+popup/item_3/text = "4"
+popup/item_3/id = 3
+popup/item_4/text = "5"
+popup/item_4/id = 4
+popup/item_5/text = "6"
+popup/item_5/id = 5
+popup/item_6/text = "7"
+popup/item_6/id = 6
+popup/item_7/text = "8"
+popup/item_7/id = 7
+popup/item_8/text = "9"
+popup/item_8/id = 8
+popup/item_9/text = "10"
+popup/item_9/id = 9
+popup/item_10/text = "11"
+popup/item_10/id = 10
+popup/item_11/text = "12"
+popup/item_11/id = 11
+
+[node name="LineEdit3" type="LineEdit" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList/BoxContainer3/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "2024"
+script = SubResource("GDScript_0f16t")
+
+[node name="BoxContainer2" type="BoxContainer" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList/BoxContainer3"]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList/BoxContainer3/BoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "16"
+
+[node name="LineEdit2" type="LineEdit" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList/BoxContainer3/BoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "30"
+
+[node name="Button" type="Button" parent="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList/BoxContainer3/BoxContainer2"]
+layout_mode = 2
+text = " Dodaj "
+script = SubResource("GDScript_nhcpy")
+
+[node name="Button" type="Button" parent="AspectRatioContainer/BoxContainer/MP"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Zapisz zmiany"
+script = SubResource("GDScript_747ai")
+
+[connection signal="pressed" from="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/BoxContainer2/np" to="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList" method="_on_np_pressed"]
+[connection signal="pressed" from="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/BoxContainer2/nb" to="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList" method="_on_nb_pressed"]
+[connection signal="pressed" from="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/BoxContainer2/delete" to="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList" method="_on_delete_pressed"]
+[connection signal="item_activated" from="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList" to="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList" method="_on_item_activated"]
+[connection signal="item_selected" from="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList" to="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList" method="_on_item_selected"]
+[connection signal="pressed" from="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList/BoxContainer3/BoxContainer2/Button" to="AspectRatioContainer/BoxContainer/MP/VBoxContainer/VBoxContainer/ItemList/BoxContainer3/BoxContainer2/Button" method="_on_pressed"]
+[connection signal="pressed" from="AspectRatioContainer/BoxContainer/MP/Button" to="AspectRatioContainer/BoxContainer/MP/Button" method="_on_pressed"]

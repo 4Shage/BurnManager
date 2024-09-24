@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://dxycp2bo1qy8w"]
+[gd_scene load_steps=2 format=3 uid="uid://dxycp2bo1qy8w"]
+
+[ext_resource type="Theme" uid="uid://cmv6syjtux7aq" path="res://themes/light.tres" id="1_kcwue"]
 
 [node name="Rules" type="Control"]
 layout_mode = 3
@@ -7,6 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_kcwue")
 
 [node name="BoxContainer" type="BoxContainer" parent="."]
 layout_mode = 1
