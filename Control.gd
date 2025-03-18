@@ -24,13 +24,11 @@ func _process(_delta):
 			swiping["curPos"] = get_global_mouse_position()
 			if swiping["startPos"].distance_to(swiping["curPos"]) >= 100:
 				if swiping["startPos"].x - swiping["curPos"].x <= -10:
-					print("swipe")
 					if !swiping["navbar"]:
 						get_parent().add_child(navbar.instantiate())
 						swiping["navbar"] = true
 					swiping["swp"] = false
 				if swiping["startPos"].x - swiping["curPos"].x >= -10:
-					print("swipe")
 					if swiping["navbar"]:
 						swiping["navbar"] = false
 					swiping["swp"] = false

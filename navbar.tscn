@@ -81,18 +81,19 @@ script = SubResource("GDScript_51dkr")
 
 [node name="AspectRatioContainer" type="BoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 9
-anchor_bottom = 1.0
-offset_right = 300.0
-grow_vertical = 2
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 108.0
+grow_horizontal = 2
 
 [node name="BoxContainer" type="BoxContainer" parent="AspectRatioContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="Panel" type="Panel" parent="AspectRatioContainer/BoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ColorRect" type="ColorRect" parent="AspectRatioContainer/BoxContainer/Panel"]
@@ -115,26 +116,35 @@ grow_vertical = 2
 size_flags_horizontal = 2
 
 [node name="TextureRect" type="TextureRect" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer"]
+visible = false
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="Menu" type="Button" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Menu" type="Button" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 text = "Menu"
 icon = ExtResource("2_8ke3q")
 expand_icon = true
 script = SubResource("GDScript_28yiv")
 
-[node name="Harmonogram" type="Button" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer"]
+[node name="Harmonogram" type="Button" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Harmonogram [WIP]"
 icon = ExtResource("3_hbajd")
 expand_icon = true
 script = SubResource("GDScript_6y3qv")
 
-[node name="Podopieczni" type="Button" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer"]
+[node name="Podopieczni" type="Button" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Podopieczni"
 icon = ExtResource("4_jsgys")
 expand_icon = true
@@ -142,11 +152,13 @@ script = SubResource("GDScript_6xvxy")
 
 [node name="BoxContainer" type="BoxContainer" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 10
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="Regulamin" type="Button" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/BoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Regulamin"
 icon = ExtResource("5_2d0ge")
 expand_icon = true
@@ -155,13 +167,14 @@ script = SubResource("GDScript_8vufk")
 [node name="Profil" type="Button" parent="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/BoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Profil"
 icon = ExtResource("6_8kg00")
 expand_icon = true
 script = SubResource("GDScript_ihp5e")
 
-[connection signal="pressed" from="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/Menu" to="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/Menu" method="_on_pressed"]
-[connection signal="pressed" from="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/Harmonogram" to="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/Harmonogram" method="_on_pressed"]
-[connection signal="pressed" from="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/Podopieczni" to="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/Podopieczni" method="_on_pressed"]
+[connection signal="pressed" from="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/HBoxContainer/Menu" to="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/HBoxContainer/Menu" method="_on_pressed"]
+[connection signal="pressed" from="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/HBoxContainer/Harmonogram" to="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/HBoxContainer/Harmonogram" method="_on_pressed"]
+[connection signal="pressed" from="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/HBoxContainer/Podopieczni" to="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/HBoxContainer/Podopieczni" method="_on_pressed"]
 [connection signal="pressed" from="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/BoxContainer/Regulamin" to="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/BoxContainer/Regulamin" method="_on_pressed"]
 [connection signal="pressed" from="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/BoxContainer/Profil" to="AspectRatioContainer/BoxContainer/Panel/VBoxContainer/BoxContainer/Profil" method="_on_pressed"]
